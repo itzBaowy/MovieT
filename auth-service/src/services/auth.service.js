@@ -7,12 +7,12 @@ import { validateEmail, validateUsername, validatePassword } from '@moviet/share
 const generateTokens = (user) => {
   const accessToken = jwt.sign(
     { id: user.id, username: user.username, role: user.role },
-    process.env.JWT_ACCESS_SECRET || 'access_secret',
+    process.env.JWT_ACCESS_SECRET,
     { expiresIn: '15m' }
   );
   const refreshToken = jwt.sign(
     { id: user.id },
-    process.env.JWT_REFRESH_SECRET || 'refresh_secret',
+    process.env.JWT_REFRESH_SECRET,
     { expiresIn: '7d' }
   );
   return { accessToken, refreshToken };
@@ -57,13 +57,7 @@ export const authService = {
 
     const { accessToken, refreshToken } = generateTokens(user);
 
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken }
-    });
-
-    const { password: _, refreshToken: __, ...userWithoutSecrets } = user;
-    return { user: userWithoutSecrets, accessToken, refreshToken };
+    return { accessToken, refreshToken };
   },
 
   refreshToken: async (req) => {
@@ -71,18 +65,14 @@ export const authService = {
     if (!refreshToken) throw new UnauthorizedException("Refresh token không được để trống");
 
     try {
-      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || 'refresh_secret');
+      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
       const user = await prisma.user.findUnique({ where: { id: decoded.id } });
 
-      if (!user || user.refreshToken !== refreshToken) {
+      if (!user) {
         throw new ForbiddenException("Refresh token không hợp lệ hoặc đã bị thu hồi");
       }
 
       const tokens = generateTokens(user);
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { refreshToken: tokens.refreshToken }
-      });
 
       return tokens;
     } catch (error) {
@@ -100,7 +90,7 @@ export const authService = {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new BadRequestException("Người dùng không tồn tại");
 
-    const { password, refreshToken, ...userWithoutSecrets } = user;
+    const { password, ...userWithoutSecrets } = user;
     return userWithoutSecrets;
   },
 
@@ -117,7 +107,7 @@ export const authService = {
       }
     });
 
-    const { password, refreshToken, ...userWithoutSecrets } = user;
+    const { password, ...userWithoutSecrets } = user;
     return userWithoutSecrets;
   }
 };
