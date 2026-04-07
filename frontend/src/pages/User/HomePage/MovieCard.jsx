@@ -20,7 +20,7 @@ export default function MovieCard({ movie }) {
         </h3>
         <div className="bg-surface-container-highest rounded-lg flex items-center justify-between p-1">
           <span className="text-xs text-on-surface-variant px-2 truncate w-[90px]" title={movie.genre}>{movie.genre}</span>
-          <Link to={`/movies/${movie.id}`} className="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary-container transition-colors shrink-0">
+          <Link to={`/movie/${movie.id}`} className="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary-container transition-colors shrink-0">
             Đặt vé
           </Link>
         </div>

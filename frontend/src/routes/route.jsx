@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import UserLayout from '../components/common/UserLayout';
 import HomePage from '../pages/User/HomePage/HomePage';
+import MovieDetailPage from '../pages/User/MovieDetail/MovieDetailPage';
 import LoginPage from '../pages/Auth/LoginPage/LoginPage';
 import SignupPage from '../pages/Auth/SignupPage/SignupPage';
 
@@ -12,6 +13,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />,
+      },
+      {
+        path: 'movie/:id',
+        element: <MovieDetailPage />,
       },
       // Thêm các routes khác của User ở đây (như /movies, /seats, /payment)
     ],

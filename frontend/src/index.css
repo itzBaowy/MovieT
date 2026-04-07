@@ -98,3 +98,24 @@
 .glow-hover:hover {
     box-shadow: 0 0 20px rgba(255, 110, 133, 0.3);
 }
+
+.hero-gradient {
+    background: linear-gradient(to top, #0e0d16 0%, rgba(14, 13, 22, 0.8) 40%, transparent 100%);
+}
+
+.text-glow {
+    text-shadow: 0 0 15px rgba(187, 184, 244, 0.4);
+}
+
+.cta-glow:hover {
+    box-shadow: 0 0 20px rgba(255, 110, 133, 0.3);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
