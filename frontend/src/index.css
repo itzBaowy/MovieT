@@ -119,3 +119,15 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+.movie-screen-curve {
+    clip-path: ellipse(150% 100% at 50% 0%);
+}
+
+.seat-grid {
+    perspective: 1000px;
+}
+
+.seat-perspective {
+    transform: rotateX(20deg);
+}

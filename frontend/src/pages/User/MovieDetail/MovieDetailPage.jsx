@@ -191,9 +191,13 @@ export default function MovieDetailPage() {
                       </div>
                       <div className="grid grid-cols-3 gap-3">
                         {st.times.map((time, tIdx) => (
-                          <button key={tIdx} className="py-2.5 rounded-xl bg-surface-container border border-outline-variant/10 text-sm font-bold hover:bg-primary hover:text-on-primary-container transition-all">
+                          <Link 
+                            key={tIdx} 
+                            to={`/booking/seats/${id}-${idx}-${tIdx}`} 
+                            className="py-2.5 rounded-xl bg-surface-container border border-outline-variant/10 text-sm font-bold hover:bg-primary hover:text-on-primary-container transition-all flex items-center justify-center"
+                          >
                             {time}
-                          </button>
+                          </Link>
                         ))}
                       </div>
                     </div>
