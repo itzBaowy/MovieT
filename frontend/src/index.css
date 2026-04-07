@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #bbb8f4;
+  --color-on-tertiary-fixed-variant: #780027;
+  --color-surface-container-high: #201e2a;
+  --color-secondary-dim: #765bee;
+  --color-surface-tint: #bbb8f4;
+  --color-primary-container: #9d9bd5;
+  --color-on-surface: #f3effc;
+  --color-on-tertiary: #480014;
+  --color-surface-container-low: #13121c;
+  --color-outline: #777480;
+  --color-tertiary-container: #fd3164;
+  --color-error: #ff6e84;
+  --color-on-secondary-container: #d4caff;
+  --color-tertiary: #ff6e85;
+  --color-on-error-container: #ffb2b9;
+  --color-primary-fixed: #bbb8f4;
+  --color-inverse-on-surface: #56545f;
+  --color-secondary-fixed: #d5cbff;
+  --color-secondary-container: #4723be;
+  --color-on-tertiary-fixed: #39000e;
+  --color-surface-container: #1a1823;
+  --color-on-surface-variant: #ada9b6;
+  --color-background: #0e0d16;
+  --color-inverse-surface: #fcf8ff;
+  --color-on-primary: #363567;
+  --color-on-primary-container: #1e1c4e;
+  --color-primary-fixed-dim: #adabe6;
+  --color-tertiary-dim: #e31754;
+  --color-error-container: #a70138;
+  --color-secondary: #a18eff;
+  --color-on-background: #f3effc;
+  --color-outline-variant: #484751;
+  --color-surface-dim: #0e0d16;
+  --color-surface: #0e0d16;
+  --color-error-dim: #d73357;
+  --color-tertiary-fixed-dim: #ff788c;
+  --color-surface-bright: #2c2a39;
+  --color-secondary-fixed-dim: #c7bbff;
+  --color-on-primary-fixed: #211f51;
+  --color-primary-dim: #adabe6;
+  --color-on-tertiary-container: #000000;
+  --color-surface-container-highest: #262431;
+  --color-on-secondary-fixed-variant: #5231c7;
+  --color-tertiary-fixed: #ff909e;
+  --color-surface-variant: #262431;
+  --color-on-primary-fixed-variant: #3f3e71;
+  --color-inverse-primary: #5b598f;
+  --color-on-secondary-fixed: #3400a5;
+  --color-on-error: #490013;
+  --color-on-secondary: #20006e;
+  --color-surface-container-lowest: #000000;
+
+  --radius-DEFAULT: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  --font-headline: "Plus Jakarta Sans", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+  }
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.glass-panel {
+    background: rgba(38, 36, 49, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.movie-card-glow:hover {
+    box-shadow: 0 0 20px rgba(255, 110, 133, 0.2);
+}
+
+.glass-card {
+    background: rgba(38, 36, 49, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.gradient-btn {
+    background: linear-gradient(45deg, var(--color-primary), var(--color-primary-container));
+}
+
+.glow-hover:hover {
+    box-shadow: 0 0 20px rgba(255, 110, 133, 0.3);
+}
