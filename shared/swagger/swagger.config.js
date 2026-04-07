@@ -12,7 +12,7 @@ export const swaggerOptions = {
         },
         servers: [
             {
-                url: `http://localhost:${PORT}/api`,
+                url: `http://localhost:4000/api`,
             },
         ],
         components: {
