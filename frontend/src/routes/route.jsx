@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import UserLayout from '../components/common/UserLayout';
 import HomePage from '../pages/User/HomePage/HomePage';
 import LoginPage from '../pages/Auth/LoginPage/LoginPage';
+import SignupPage from '../pages/Auth/SignupPage/SignupPage';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <LoginPage />,
+  },
+  {
+    path: '/register',
+    element: <SignupPage />,
   },
   // Thêm các routes cho Admin ở đây (bọc trong AdminLayout)
 ]);

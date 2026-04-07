@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function LoginPage() {
   return (
@@ -90,7 +91,7 @@ export default function LoginPage() {
         {/* Footer Note */}
         <p className="text-center mt-8 text-on-surface-variant text-sm">
           Don't have an account? 
-          <a className="text-secondary hover:text-secondary-fixed transition-colors font-semibold ml-1" href="#">Join the Premiere</a>
+          <Link className="text-secondary hover:text-secondary-fixed transition-colors font-semibold ml-1" to="/register">Join the Premiere</Link>
         </p>
       </main>
 
