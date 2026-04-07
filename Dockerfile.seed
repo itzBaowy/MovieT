@@ -1,0 +1,18 @@
+FROM node:20-alpine
+RUN apk add --no-cache openssl
+WORKDIR /app
+
+COPY package.json ./
+COPY auth-service/package.json ./auth-service/
+COPY movie-service/package.json ./movie-service/
+COPY shared/package.json ./shared/
+
+RUN npm install
+
+COPY . .
+
+# Generate Prisma Client cho tất cả các service
+RUN cd auth-service && npx prisma generate
+RUN cd movie-service && npx prisma generate
+
+CMD ["npm", "run", "seed"]

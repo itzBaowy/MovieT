@@ -21,6 +21,19 @@ services:
         condition: service_healthy
     entrypoint: [ "bash", "-c", "mongo --host moviet-mongodb:27017 --eval 'rs.initiate() || db.stats()'" ]
 
+  seed-setup:
+    build:
+      context: .
+      dockerfile: Dockerfile.seed
+    container_name: moviet-seed-setup
+    depends_on:
+      mongodb-setup:
+        condition: service_completed_successfully
+    command: npm run seed
+    env_file:
+      - ./auth-service/.env
+      - ./movie-service/.env
+
   auth-service:
     build:
       context: .
@@ -31,7 +44,8 @@ services:
     env_file:
       - ./auth-service/.env
     depends_on:
-      - mongodb
+      seed-setup:
+        condition: service_completed_successfully
 
   movie-service:
     build:
@@ -43,7 +57,8 @@ services:
     env_file:
       - ./movie-service/.env
     depends_on:
-      - mongodb
+      seed-setup:
+        condition: service_completed_successfully
 
   prisma-studio:
     build:
