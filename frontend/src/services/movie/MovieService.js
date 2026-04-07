@@ -1,10 +1,10 @@
-import axiosClient from '../../configs/axiosConfig.js';
+import axiosInstance from '../../configs/axios.js';
 
 const MovieService = {
-  getNowShowing: () => axiosClient.get('/movies/now-showing'),
-  getComingSoon: () => axiosClient.get('/movies/coming-soon'),
-  getMovieById: (id) => axiosClient.get(`/movies/${id}`),
-  searchMovies: (query) => axiosClient.get('/movies/search', { params: { q: query } }),
+  getNowShowing: () => axiosInstance.get('/movies/now-showing'),
+  getComingSoon: () => axiosInstance.get('/movies/coming-soon'),
+  getMovieById: (id) => axiosInstance.get(`/movies/${id}`),
+  searchMovies: (query) => axiosInstance.get('/movies/search', { params: { q: query } }),
 };
 
 export default MovieService;

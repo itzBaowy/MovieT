@@ -7,6 +7,7 @@ import PaymentPage from '../pages/User/PaymentPage/PaymentPage';
 import MyTicketsPage from '../pages/User/MyTicketsPage/MyTicketsPage';
 import LoginPage from '../pages/Auth/LoginPage/LoginPage';
 import SignupPage from '../pages/Auth/SignupPage/SignupPage';
+import { Toaster } from 'react-hot-toast';
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,6 @@ const router = createBrowserRouter([
         path: 'my-tickets',
         element: <MyTicketsPage />,
       },
-      // Thêm các routes khác của User ở đây (như /movies, /seats, /payment)
     ],
   },
   {
@@ -44,9 +44,13 @@ const router = createBrowserRouter([
     path: '/register',
     element: <SignupPage />,
   },
-  // Thêm các routes cho Admin ở đây (bọc trong AdminLayout)
 ]);
 
 export default function AppRouter() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <Toaster position="top-right" reverseOrder={false} />
+      <RouterProvider router={router} />
+    </>
+  );
 }
