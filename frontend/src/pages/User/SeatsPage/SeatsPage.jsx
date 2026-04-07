@@ -165,10 +165,13 @@ export default function SeatsPage() {
              <span className="text-xl font-black text-primary text-center">{totalPrice.toLocaleString()}đ</span>
           </div>
 
-          <button className="w-full md:w-64 h-14 bg-gradient-to-r from-primary to-primary-container rounded-xl flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(187,184,244,0.3)] hover:shadow-[0_0_30px_rgba(187,184,244,0.5)] transition-all duration-300 active:scale-95 group">
+          <Link 
+            to={`/booking/payment/${id}`}
+            className="w-full md:w-64 h-14 bg-gradient-to-r from-primary to-primary-container rounded-xl flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(187,184,244,0.3)] hover:shadow-[0_0_30px_rgba(187,184,244,0.5)] transition-all duration-300 active:scale-95 group"
+          >
             <span className="text-on-primary-container font-extrabold tracking-tight">Thanh toán</span>
             <span className="material-symbols-outlined text-on-primary-container group-hover:translate-x-1 transition-transform">arrow_forward</span>
-          </button>
+          </Link>
         </div>
       </div>
     </div>
