@@ -1,6 +1,6 @@
 import express from 'express';
 import { authController } from '../controllers/auth.controller.js';
-import { protect } from '../common/middlewares/protect.middleware.js';
+import { protect } from '@moviet/shared/middlewares/protect.middleware.js';
 
 const authRouter = express.Router();
 
@@ -24,6 +24,16 @@ const authRouter = express.Router();
  *     responses:
  *       201:
  *         description: Register success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       400:
+ *         description: Bad request (Validation error)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 authRouter.post('/register', authController.register);
 
@@ -45,6 +55,16 @@ authRouter.post('/register', authController.register);
  *     responses:
  *       200:
  *         description: Login success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       401:
+ *         description: Unauthorized (Invalid credentials)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 authRouter.post('/login', authController.login);
 
@@ -65,6 +85,16 @@ authRouter.post('/login', authController.login);
  *     responses:
  *       200:
  *         description: Token refresh success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       403:
+ *         description: Forbidden (Invalid refresh token)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 authRouter.post('/refresh-token', authController.refreshToken);
 
@@ -79,6 +109,12 @@ authRouter.post('/refresh-token', authController.refreshToken);
  *     responses:
  *       200:
  *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       401:
+ *         description: Unauthorized
  */
 authRouter.get('/info', protect, authController.getInfo);
 
@@ -102,6 +138,12 @@ authRouter.get('/info', protect, authController.getInfo);
  *     responses:
  *       200:
  *         description: Update success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ *       401:
+ *         description: Unauthorized
  */
 authRouter.put('/update', protect, authController.updateInfo);
 

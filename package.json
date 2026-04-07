@@ -1,0 +1,10 @@
+{
+  "name": "moviet-monorepo",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "auth-service",
+    "movie-service",
+    "shared"
+  ]
+}

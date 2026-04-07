@@ -1,5 +1,5 @@
 import { authService } from '../services/auth.service.js';
-import { responseSuccess } from '../common/helpers/response.helper.js';
+import { responseSuccess } from '@moviet/shared/helpers/response.helper.js';
 
 export const authController = {
   register: async (req, res, next) => {

@@ -3,11 +3,11 @@ import express from 'express';
 import cors from 'cors';
 import rootRouter from './routers/root.router.js';
 import { createServer } from 'http';
-import { appErorr } from './common/helpers/handle-error.helper.js';
-import { NotFoundException } from './common/helpers/exception.helper.js';
+import { appErorr } from '@moviet/shared/helpers/handle-error.helper.js';
+import { NotFoundException } from '@moviet/shared/helpers/exception.helper.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-import { swaggerOptions } from './common/swagger/swagger.config.js';
+import { swaggerOptions } from '@moviet/shared/swagger/swagger.config.js';
 
 const app = express();
 const PORT = process.env.PORT;

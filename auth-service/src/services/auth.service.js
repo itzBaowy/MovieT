@@ -1,8 +1,8 @@
 import prisma from '../prisma/connect.prisma.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { BadRequestException, UnauthorizedException, ForbiddenException } from '../common/helpers/exception.helper.js';
-import { validateEmail, validateUsername, validatePassword } from '../common/helpers/validate.helper.js';
+import { BadRequestException, UnauthorizedException, ForbiddenException } from '@moviet/shared/helpers/exception.helper.js';
+import { validateEmail, validateUsername, validatePassword } from '@moviet/shared/helpers/validate.helper.js';
 
 const generateTokens = (user) => {
   const accessToken = jwt.sign(
