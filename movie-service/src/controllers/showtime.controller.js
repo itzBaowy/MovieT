@@ -20,5 +20,15 @@ export const showtimeController = {
         } catch (error) {
             next(error);
         }
+    },
+
+    bookSeats: async (req, res, next) => {
+        try {
+            const result = await showtimeService.bookSeats(req);
+            const response = responseSuccess(result, 'Book seats successfully', 201);
+            res.status(response.statusCode).json(response);
+        } catch (error) {
+            next(error);
+        }
     }
 };

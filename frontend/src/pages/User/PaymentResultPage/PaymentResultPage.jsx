@@ -1,8 +1,13 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import ShowtimeService from "../../../services/showtime/ShowtimeService.js";
+import PaymentService from "../../../services/payment/PaymentService.js";
 
 export default function PaymentResultPage() {
   const [searchParams] = useSearchParams();
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [bookingDone, setBookingDone] = useState(false);
 
   const result = useMemo(() => {
     const resultCode = Number(searchParams.get("resultCode"));
@@ -19,6 +24,92 @@ export default function PaymentResultPage() {
       message,
     };
   }, [searchParams]);
+
+  const momoResultPayload = useMemo(() => {
+    return Object.fromEntries(searchParams.entries());
+  }, [searchParams]);
+
+  useEffect(() => {
+    const confirmBooking = async () => {
+      if (!result.isSuccess) return;
+
+      const orderLockKey = `booking_confirmed_${result.orderId}`;
+      if (result.orderId && sessionStorage.getItem(orderLockKey) === "done") {
+        setBookingDone(true);
+        return;
+      }
+
+      if (
+        result.orderId &&
+        sessionStorage.getItem(orderLockKey) === "processing"
+      ) {
+        return;
+      }
+
+      const pendingBookingRaw = localStorage.getItem("pending_booking");
+      if (!pendingBookingRaw) return;
+
+      let pendingBooking;
+      try {
+        pendingBooking = JSON.parse(pendingBookingRaw);
+      } catch (error) {
+        localStorage.removeItem("pending_booking");
+        return;
+      }
+
+      if (
+        !pendingBooking?.showtimeId ||
+        !Array.isArray(pendingBooking?.seats) ||
+        pendingBooking.seats.length === 0
+      ) {
+        localStorage.removeItem("pending_booking");
+        return;
+      }
+
+      if (
+        pendingBooking.orderId &&
+        result.orderId &&
+        pendingBooking.orderId !== result.orderId
+      ) {
+        return;
+      }
+
+      try {
+        setIsConfirming(true);
+        if (result.orderId) {
+          sessionStorage.setItem(orderLockKey, "processing");
+        }
+        const confirmResponse = await PaymentService.confirmMomoPayment({
+          orderId: pendingBooking.orderId || result.orderId,
+          momoResult: momoResultPayload,
+        });
+
+        const bookingToken = confirmResponse?.data?.bookingToken;
+        if (!bookingToken) {
+          throw new Error("Khong nhan duoc booking token tu payment service");
+        }
+
+        await ShowtimeService.bookSeats(pendingBooking.showtimeId, {
+          bookingToken,
+        });
+
+        localStorage.removeItem("pending_booking");
+        if (result.orderId) {
+          sessionStorage.setItem(orderLockKey, "done");
+        }
+        setBookingDone(true);
+      } catch (error) {
+        if (result.orderId) {
+          sessionStorage.removeItem(orderLockKey);
+        }
+        toast.error(error?.message || "Khong the xac nhan dat ve");
+      } finally {
+        setIsConfirming(false);
+      }
+    };
+
+    confirmBooking();
+  }, [result.isSuccess, result.orderId, momoResultPayload]);
 
   return (
     <div className="min-h-screen bg-background text-on-background px-6 py-16">
@@ -39,6 +130,14 @@ export default function PaymentResultPage() {
           </h1>
 
           <p className="text-on-surface-variant text-sm">{result.message}</p>
+          {result.isSuccess && isConfirming ? (
+            <p className="text-xs text-primary">
+              Dang dong bo ve va cap nhat ghe...
+            </p>
+          ) : null}
+          {result.isSuccess && bookingDone ? (
+            <p className="text-xs text-green-400">Da tao ve thanh cong.</p>
+          ) : null}
         </div>
 
         <div className="mt-8 rounded-2xl border border-outline-variant/20 bg-surface/40 p-4 space-y-2 text-sm">

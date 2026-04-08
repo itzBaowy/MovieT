@@ -22,6 +22,7 @@ export default function PaymentPage() {
       date: showtime.date || "--/--/----",
       time: showtime.time || "--:--",
       cinema: cinema.name || "Cinema",
+      selectedSeats,
       seats: selectedSeats.length > 0 ? selectedSeats.join(", ") : "Chưa chọn",
       amount: totalPrice,
       poster: movie.image || "https://via.placeholder.com/400x600?text=Movie",
@@ -45,16 +46,28 @@ export default function PaymentPage() {
         orderInfo: `Thanh toan ve phim ${booking.movieTitle}`,
         extraData: JSON.stringify({
           showtimeId: booking.showtimeId,
-          seats: booking.seats,
+          seats: booking.selectedSeats,
         }),
       };
 
       const response = await PaymentService.createMomoPayment(payload);
       const paymentUrl = response?.data?.paymentUrl;
+      const orderId = response?.data?.orderId;
 
       if (!paymentUrl) {
         throw new Error("Không nhận được link thanh toán từ MoMo");
       }
+
+      localStorage.setItem(
+        "pending_booking",
+        JSON.stringify({
+          showtimeId: booking.showtimeId,
+          seats: booking.selectedSeats,
+          amount: booking.amount,
+          orderId,
+          paymentType: "MOMO",
+        }),
+      );
 
       window.location.href = paymentUrl;
     } catch (error) {

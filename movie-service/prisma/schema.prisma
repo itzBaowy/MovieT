@@ -53,6 +53,23 @@ model Showtime {
   format      String   // e.g., "IMAX 2D"
   price       Int      // e.g., 120000
   bookedSeats String[] // e.g., ["B1", "B2"]
+  tickets     Ticket[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Ticket {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String
+  showtimeId  String   @db.ObjectId
+  showtime    Showtime @relation(fields: [showtimeId], references: [id])
+
+  orderId     String
+  amount      Int
+  seats       String[]
+  status      String   @default("PAID")
+  paymentType String   @default("MOMO")
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

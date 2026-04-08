@@ -29,4 +29,14 @@ export const paymentController = {
             next(error);
         }
     },
+
+    confirmMomoPayment: async (req, res, next) => {
+        try {
+            const result = await paymentService.confirmMomoPayment(req);
+            const response = responseSuccess(result, 'Confirm MoMo payment success');
+            res.status(response.statusCode).json(response);
+        } catch (error) {
+            next(error);
+        }
+    },
 };
