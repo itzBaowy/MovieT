@@ -5,6 +5,7 @@
   "workspaces": [
     "auth-service",
     "movie-service",
+    "payment-service",
     "shared"
   ],
   "scripts": {

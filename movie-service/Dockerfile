@@ -6,6 +6,7 @@ WORKDIR /app
 COPY package.json ./
 COPY auth-service/package.json ./auth-service/
 COPY movie-service/package.json ./movie-service/
+COPY payment-service/package.json ./payment-service/
 COPY shared/package.json ./shared/
 
 RUN npm install
