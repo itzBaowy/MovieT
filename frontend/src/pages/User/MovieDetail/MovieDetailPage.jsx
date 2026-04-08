@@ -1,29 +1,69 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useGetMovieDetail from '../../../hooks/MovieHook/useGetMovieDetail';
+import useGetMovieShowtimes from '../../../hooks/ShowtimeHook/useGetMovieShowtimes';
 
 export default function MovieDetailPage() {
   const { id } = useParams();
   const { movie, loading, error } = useGetMovieDetail(id);
+  const { showtimes: allShowtimes, loading: stLoading } = useGetMovieShowtimes(id);
+
+  // Generate 7 days starting from today
+  const dates = useMemo(() => {
+    const days = [];
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      days.push({
+        full: date.toISOString().split('T')[0],
+        day: date.getDate(),
+        month: date.toLocaleString('default', { month: 'short' }),
+        weekday: i === 0 ? 'Today' : date.toLocaleString('default', { weekday: 'short' })
+      });
+    }
+    return days;
+  }, []);
+
+  const [selectedDate, setSelectedDate] = useState(dates[0].full);
+
+  // Filter showtimes for selected date
+  const filteredShowtimes = useMemo(() => {
+    if (!allShowtimes) return [];
+    
+    return allShowtimes.map(group => ({
+      ...group,
+      showtimes: group.showtimes.filter(st => st.date === selectedDate)
+    })).filter(group => group.showtimes.length > 0);
+  }, [allShowtimes, selectedDate]);
 
   if (loading) {
-    return <div className="min-h-screen py-24 text-center text-on-surface">Đang tải thông tin phim...</div>;
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+          <p className="text-on-surface-variant font-medium animate-pulse">Đang tải thông tin phim...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error || !movie) {
-    return <div className="min-h-screen py-24 text-center text-error">Không tìm thấy phim này.</div>;
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-6">
+        <div className="w-20 h-20 rounded-full bg-error/10 flex items-center justify-center">
+          <span className="material-symbols-outlined text-error text-4xl">error</span>
+        </div>
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-2">Không tìm thấy phim</h2>
+          <p className="text-on-surface-variant">Phim này có thể đã ngừng chiếu hoặc lỗi đường truyền.</p>
+        </div>
+        <Link to="/movies" className="bg-surface-container px-6 py-3 rounded-xl font-bold hover:bg-surface-bright transition-colors">
+          Quay lại danh sách
+        </Link>
+      </div>
+    );
   }
-
-  const showtimes = [
-    {
-      cinema: "CGV Vincom Center",
-      times: ["10:30", "14:15", "18:45"]
-    },
-    {
-      cinema: "Lotte Cinema Go Vap",
-      times: ["11:00", "15:30", "21:00"]
-    }
-  ];
 
   const recommendations = [
     { id: 'br2049', title: "Blade Runner 2049", genres: "Action, Sci-Fi", rating: 8.2, image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCqRHVdQUYJnzMdlqcDd8MxwrakTfcWmygn47ZGeE5kg2ZeI0QJW3vtbzRe9ba90PB-b7SLa03fkjA15W5C42xr2V796xyaYPApmbBHzYupEgS1m8ZFjvvMght940NniINwHSuVCqFs9fJxBsJVM8dGVyf853D9Cc_x5rWOnkk2D9BQxbfSF4kQa_ujR5jJDvVAo104bLMV73EDt3CAVnLR1UFcDBw4jozMBVLuiTCYKWLy1yyXU9zWdk8JMWQ8UFW5i49GsINcNQA" },
@@ -155,41 +195,63 @@ export default function MovieDetailPage() {
                 
                 {/* Date Selector */}
                 <div className="flex gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
-                  <button className="flex-shrink-0 flex flex-col items-center justify-center w-16 h-20 rounded-2xl bg-primary text-on-primary-container shadow-lg shadow-primary/20">
-                    <span className="text-xs font-bold">Today</span>
-                    <span className="text-xl font-extrabold tracking-tighter">24</span>
-                  </button>
-                  <button className="flex-shrink-0 flex flex-col items-center justify-center w-16 h-20 rounded-2xl bg-surface-container hover:bg-surface-bright transition-colors">
-                    <span className="text-xs font-medium text-on-surface-variant">May</span>
-                    <span className="text-xl font-extrabold tracking-tighter">25</span>
-                  </button>
-                  <button className="flex-shrink-0 flex flex-col items-center justify-center w-16 h-20 rounded-2xl bg-surface-container hover:bg-surface-bright transition-colors">
-                    <span className="text-xs font-medium text-on-surface-variant">May</span>
-                    <span className="text-xl font-extrabold tracking-tighter">26</span>
-                  </button>
+                  {dates.map((d) => (
+                    <button 
+                      key={d.full}
+                      onClick={() => setSelectedDate(d.full)}
+                      className={`flex-shrink-0 flex flex-col items-center justify-center w-16 h-20 rounded-2xl transition-all duration-300 ${
+                        selectedDate === d.full 
+                          ? 'bg-primary text-on-primary-container shadow-lg shadow-primary/20 scale-105' 
+                          : 'bg-surface-container hover:bg-surface-bright text-on-surface-variant'
+                      }`}
+                    >
+                      <span className="text-[10px] font-bold uppercase tracking-tighter opacity-70">{d.weekday}</span>
+                      <span className="text-xl font-extrabold tracking-tighter">{d.day}</span>
+                      <span className="text-[9px] font-bold uppercase">{d.month}</span>
+                    </button>
+                  ))}
                 </div>
 
                 {/* Cinemas */}
                 <div className="space-y-8">
-                  {showtimes.map((st, idx) => (
-                    <div key={idx} className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-secondary">location_on</span>
-                        <h4 className="font-bold text-on-surface">{st.cinema}</h4>
-                      </div>
-                      <div className="grid grid-cols-3 gap-3">
-                        {st.times.map((time, tIdx) => (
-                          <Link 
-                            key={tIdx} 
-                            to={`/booking/seats/${id}-${idx}-${tIdx}`} 
-                            className="py-2.5 rounded-xl bg-surface-container border border-outline-variant/10 text-sm font-bold hover:bg-primary hover:text-on-primary-container transition-all flex items-center justify-center"
-                          >
-                            {time}
-                          </Link>
-                        ))}
-                      </div>
+                  {stLoading ? (
+                    <div className="space-y-6">
+                      {[1, 2].map(i => (
+                        <div key={i} className="animate-pulse space-y-3">
+                          <div className="h-5 bg-surface-container w-2/3 rounded"></div>
+                          <div className="grid grid-cols-3 gap-3">
+                            {[1, 2, 3].map(j => <div key={j} className="h-10 bg-surface-container rounded-xl"></div>)}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  ) : filteredShowtimes.length > 0 ? (
+                    filteredShowtimes.map((group, idx) => (
+                      <div key={idx} className="space-y-4">
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-secondary">location_on</span>
+                          <h4 className="font-bold text-on-surface">{group.cinema.name}</h4>
+                        </div>
+                        <div className="grid grid-cols-3 gap-3">
+                          {group.showtimes.map((st) => (
+                            <Link 
+                              key={st.id} 
+                              to={`/booking/seats/${st.id}`} 
+                              className="py-2.5 rounded-xl bg-surface-container border border-outline-variant/10 text-sm font-bold hover:bg-primary hover:text-on-primary-container transition-all flex items-center justify-center flex-col"
+                            >
+                              <span>{st.time}</span>
+                              <span className="text-[9px] opacity-60 font-medium">{st.format}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-10 glass-panel rounded-2xl border border-outline-variant/10 bg-surface-container/30">
+                      <span className="material-symbols-outlined text-on-surface-variant/20 text-5xl mb-3">event_busy</span>
+                      <p className="text-on-surface-variant text-sm font-medium px-6">Rất tiếc, hiện chưa có suất chiếu nào cho ngày này.</p>
+                    </div>
+                  )}
                 </div>
 
                 <button className="w-full mt-10 py-4 bg-surface-container-highest rounded-2xl text-primary font-bold border border-primary/20 hover:bg-primary/10 transition-colors flex items-center justify-center gap-2">

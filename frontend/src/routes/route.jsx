@@ -2,6 +2,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import UserLayout from '../components/common/UserLayout';
 import HomePage from '../pages/User/HomePage/HomePage';
 import MovieDetailPage from '../pages/User/MovieDetail/MovieDetailPage';
+import MoviesPage from '../pages/User/MoviesPage/MoviesPage';
+import ProfilePage from '../pages/User/ProfilePage/ProfilePage';
 import SeatsPage from '../pages/User/SeatsPage/SeatsPage';
 import PaymentPage from '../pages/User/PaymentPage/PaymentPage';
 import MyTicketsPage from '../pages/User/MyTicketsPage/MyTicketsPage';
@@ -21,8 +23,16 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
+        path: 'movies',
+        element: <MoviesPage />,
+      },
+      {
         path: 'movie/:id',
         element: <MovieDetailPage />,
+      },
+      {
+        path: 'profile',
+        element: <ProtectedRoute><ProfilePage /></ProtectedRoute>,
       },
       {
         path: 'my-tickets',

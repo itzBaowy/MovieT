@@ -1,5 +1,6 @@
 import express from 'express';
 import { movieController } from '../controllers/movie.controller.js';
+import { showtimeController } from '../controllers/showtime.controller.js';
 import { protect } from '@moviet/shared/middlewares/protect.middleware.js';
 
 const movieRouter = express.Router();
@@ -46,6 +47,27 @@ movieRouter.get('/', movieController.getMovies);
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 movieRouter.get('/:id', movieController.getMovieDetail);
+
+/**
+ * @swagger
+ * /movies/{id}/showtimes:
+ *   get:
+ *     summary: Get showtimes by movie
+ *     tags: [Movies]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Get showtimes success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SuccessResponse'
+ */
+movieRouter.get('/:id/showtimes', showtimeController.getShowtimesByMovieId);
 
 /**
  * @swagger

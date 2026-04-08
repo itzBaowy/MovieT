@@ -22,6 +22,38 @@ model Movie {
   tags        String[] // ["Action", "Sci-Fi", ...]
   status      String   @default("NOW_SHOWING") // "COMING_SOON", "NOW_SHOWING", "ARCHIVED"
   releaseDate DateTime?
+  
+  showtimes   Showtime[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Cinema {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  address   String
+  city      String
+
+  showtimes Showtime[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Showtime {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  movieId     String   @db.ObjectId
+  movie       Movie    @relation(fields: [movieId], references: [id])
+  cinemaId    String   @db.ObjectId
+  cinema      Cinema   @relation(fields: [cinemaId], references: [id])
+  
+  date        String   // e.g., "YYYY-MM-DD"
+  time        String   // e.g., "19:30"
+  format      String   // e.g., "IMAX 2D"
+  price       Int      // e.g., 120000
+  bookedSeats String[] // e.g., ["B1", "B2"]
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

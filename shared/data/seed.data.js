@@ -107,5 +107,22 @@ export const seedData = {
             tags: ["Action", "Crime"],
             status: "NOW_SHOWING"
         }
+    ],
+    cinemas: [
+        {
+            name: "Galaxy Nguyen Du",
+            address: "116 Nguyen Du, District 1",
+            city: "Ho Chi Minh"
+        },
+        {
+            name: "CGV Vincom Landmark 81",
+            address: "772 Dien Bien Phu, Binh Thanh District",
+            city: "Ho Chi Minh"
+        },
+        {
+            name: "Lotte Cinema Go Vap",
+            address: "242 Nguyen Van Luong, Go Vap District",
+            city: "Ho Chi Minh"
+        }
     ]
 };

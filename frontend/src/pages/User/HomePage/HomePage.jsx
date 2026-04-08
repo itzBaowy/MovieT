@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import useGetNowShowing from "../../../hooks/MovieHook/useGetNowShowing";
+import useGetComingSoon from "../../../hooks/MovieHook/useGetComingSoon";
 import useGetTodayShowtimes from "../../../hooks/ShowtimeHook/useGetTodayShowtimes";
 import QuickBookingBar from "./QuickBookingBar";
 import MovieCard from "./MovieCard";
@@ -6,10 +8,12 @@ import ShowtimeCard from "./ShowtimeCard";
 
 export default function HomePage() {
   const { movies, loading: loadingMovies } = useGetNowShowing();
+  const { movies: comingSoonMovies, loading: loadingComingSoon } = useGetComingSoon();
   const { showtimes, loading: loadingShowtimes } = useGetTodayShowtimes();
 
   // Sử dụng dữ liệu thật từ API, chỉ lấy 4 phim đầu tiên cho HomePage
   const displayMovies = movies?.length > 0 ? movies.slice(0, 4) : [];
+  const displayComingSoon = comingSoonMovies?.length > 0 ? comingSoonMovies.slice(0, 4) : [];
 
   const mockStitchShowtimes = [
     {
@@ -60,10 +64,10 @@ export default function HomePage() {
               <h2 className="text-3xl font-bold font-headline mb-2">Phim Đang Chiếu</h2>
               <div className="h-1.5 w-12 bg-tertiary rounded-full"></div>
             </div>
-            <a className="text-primary font-semibold hover:underline flex items-center gap-1" href="#all-movies">
+            <Link className="text-primary font-semibold hover:underline flex items-center gap-1" to="/movies">
               Xem tất cả
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
+            </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {displayMovies.map((movie) => (
@@ -72,6 +76,38 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Coming Soon Section */}
+      {displayComingSoon.length > 0 && (
+        <section className="py-24 px-8 bg-surface">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-end mb-12">
+              <div>
+                <p className="text-amber-400 font-bold text-xs uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-sm">schedule</span>
+                  Sắp ra mắt
+                </p>
+                <h2 className="text-3xl font-bold font-headline mb-2">Phim Sắp Chiếu</h2>
+                <div className="h-1.5 w-12 bg-amber-400 rounded-full"></div>
+              </div>
+              <Link className="text-primary font-semibold hover:underline flex items-center gap-1" to="/movies?status=COMING_SOON">
+                Xem tất cả
+                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {displayComingSoon.map((movie) => (
+                <div key={movie.id} className="relative">
+                  <div className="absolute top-3 left-3 z-10 bg-amber-500/90 text-white text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg">
+                    Sắp chiếu
+                  </div>
+                  <MovieCard movie={movie} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Showtime Section */}
       <section className="py-24 px-8 bg-surface">
