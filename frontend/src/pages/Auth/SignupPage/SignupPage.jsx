@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import useAuthStore from '../../../store/useAuthStore';
+import useRegister from '../../../hooks/AuthHook/useRegister';
 import toast from 'react-hot-toast';
 
 export default function SignupPage() {
@@ -11,8 +11,7 @@ export default function SignupPage() {
     password: '',
     confirmPassword: '',
   });
-  const { register } = useAuthStore();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register, isLoading } = useRegister();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -24,22 +23,16 @@ export default function SignupPage() {
     const { fullName, username, email, password, confirmPassword } = formData;
 
     if (!fullName || !username || !email || !password || !confirmPassword) {
-      return toast.error('Please fill in all fields');
+      return toast.error('Vui lòng nhập đầy đủ thông tin');
     }
 
     if (password !== confirmPassword) {
-      return toast.error('Passwords do not match');
+      return toast.error('Mật khẩu không khớp');
     }
 
-    setIsSubmitting(true);
-    try {
-      await register({ fullName, username, email, password });
-      toast.success('Registration successful! Please login.');
+    const success = await register({ fullName, username, email, password });
+    if (success) {
       navigate('/login');
-    } catch (error) {
-      toast.error(error.message || 'Registration failed');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -122,9 +115,9 @@ export default function SignupPage() {
             <button 
               className="w-full mt-4 bg-gradient-to-br from-primary to-primary-container text-on-primary-container font-bold py-4 rounded-xl shadow-lg hover:scale-[0.98] transition-all disabled:opacity-50" 
               type="submit"
-              disabled={isSubmitting}
+              disabled={isLoading}
             >
-              {isSubmitting ? 'Creating account...' : 'Sign Up'}
+              {isLoading ? 'Đang tạo tài khoản...' : 'Đăng ký'}
             </button>
           </form>
         </div>

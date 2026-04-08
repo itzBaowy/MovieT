@@ -7,6 +7,8 @@ import PaymentPage from '../pages/User/PaymentPage/PaymentPage';
 import MyTicketsPage from '../pages/User/MyTicketsPage/MyTicketsPage';
 import LoginPage from '../pages/Auth/LoginPage/LoginPage';
 import SignupPage from '../pages/Auth/SignupPage/SignupPage';
+import GuestRoute from '../components/common/GuestRoute';
+import ProtectedRoute from '../components/common/ProtectedRoute';
 import { Toaster } from 'react-hot-toast';
 
 const router = createBrowserRouter([
@@ -24,25 +26,25 @@ const router = createBrowserRouter([
       },
       {
         path: 'my-tickets',
-        element: <MyTicketsPage />,
+        element: <ProtectedRoute><MyTicketsPage /></ProtectedRoute>,
       },
     ],
   },
   {
     path: '/booking/seats/:id',
-    element: <SeatsPage />,
+    element: <ProtectedRoute><SeatsPage /></ProtectedRoute>,
   },
   {
     path: '/booking/payment/:id',
-    element: <PaymentPage />,
+    element: <ProtectedRoute><PaymentPage /></ProtectedRoute>,
   },
   {
     path: '/login',
-    element: <LoginPage />,
+    element: <GuestRoute><LoginPage /></GuestRoute>,
   },
   {
     path: '/register',
-    element: <SignupPage />,
+    element: <GuestRoute><SignupPage /></GuestRoute>,
   },
 ]);
 

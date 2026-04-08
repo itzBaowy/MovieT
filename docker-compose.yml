@@ -71,11 +71,11 @@ services:
       seed-setup:
         condition: service_completed_successfully
 
-  prisma-studio:
+  prisma-studio-auth:
     build:
       context: .
       dockerfile: auth-service/Dockerfile
-    container_name: moviet-prisma-studio
+    container_name: moviet-prisma-studio-auth
     ports:
       - "5555:5555"
     command: npx prisma studio --port 5555 --browser none
@@ -84,6 +84,20 @@ services:
     depends_on:
       - mongodb
       - auth-service
+
+  prisma-studio-movie:
+    build:
+      context: .
+      dockerfile: movie-service/Dockerfile
+    container_name: moviet-prisma-studio-movie
+    ports:
+      - "5556:5556"
+    command: npx prisma studio --port 5556 --browser none
+    env_file:
+      - ./movie-service/.env
+    depends_on:
+      - mongodb
+      - movie-service
 
 volumes:
   moviet_db_data:

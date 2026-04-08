@@ -1,16 +1,16 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useAuthStore from '../../store/useAuthStore';
+import useLogout from '../../hooks/AuthHook/useLogout';
 import { useState, useRef, useEffect } from 'react';
 
 export default function Header() {
-  const { user, logout } = useAuthStore();
+  const user = useAuthStore(state => state.user);
+  const { logout } = useLogout();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
     setIsMenuOpen(false);
   };
 

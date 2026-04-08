@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import useAuthStore from '../../../store/useAuthStore';
+import useLogin from '../../../hooks/AuthHook/useLogin';
 import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login, isLoggingIn } = useAuthStore();
+  const { login, isLoading } = useLogin();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username || !password) {
-      return toast.error('Please fill in all fields');
+      return toast.error('Vui lòng nhập đầy đủ thông tin');
     }
 
-    try {
-      await login({ username, password });
-      toast.success('Welcome back to MovieT!');
+    const success = await login({ username, password });
+    if (success) {
       navigate('/');
-    } catch (error) {
-      toast.error(error.message || 'Login failed. Please check your credentials.');
     }
   };
 
@@ -81,9 +78,9 @@ export default function LoginPage() {
               <button 
                 className="gradient-btn w-full py-4 rounded-xl text-on-primary-container font-bold text-lg hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50" 
                 type="submit"
-                disabled={isLoggingIn}
+                disabled={isLoading}
               >
-                {isLoggingIn ? 'Logging in...' : 'Login'}
+                {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
               </button>
             </div>
           </form>
