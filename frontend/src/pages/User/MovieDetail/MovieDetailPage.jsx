@@ -1,35 +1,18 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
+import useGetMovieDetail from '../../../hooks/MovieHook/useGetMovieDetail';
 
 export default function MovieDetailPage() {
   const { id } = useParams();
+  const { movie, loading, error } = useGetMovieDetail(id);
 
-  // Mock data based on the Stitch design
-  const movie = {
-    title: "Hành Tinh Cát: Phần Hai",
-    originalTitle: "Dune: Part Two",
-    genres: ["Action", "Adventure", "Sci-Fi"],
-    rating: 8.5,
-    duration: 166,
-    year: 2024,
-    subtitle: "Việt Sub",
-    synopsis: "Paul Atreides unites with Chani and the Fremen while on a warpath of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe, he endeavors to prevent a terrible future only he can foresee.",
-    director: {
-      name: "Denis Villeneuve",
-      role: "Visionary Director",
-      image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD0k8-md8C4VYztkQx31ASbLQs6CgkXyRzaLSCno6-TySIqnELywaiOHcMvkQealSIs4oGCREa-8pI6E1GqqgKiFI3dSQ4rBEc1ouHA66SbLKrudjp8_3cUWS1gxSrCIJFNlq1LO8mrPTCSJ7tJJzHQuYEajDvBw0-F11jGvCGEFrxLT2Rm_4bZ56AlvTPVAbSu2bkXEUPkcJlUSeL1TYEnY_GKxwMQ1zq3pUWX_QxUehKbD2fr6VCiim37oXOCpjc5H2Vj62euewg"
-    },
-    production: [
-      "Warner Bros. Pictures",
-      "Legendary Entertainment"
-    ],
-    cast: [
-      { name: "Timothée Chalamet", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAs7nd8q2I6Xiw4dOa9vk2uUbLZBmJJXLUxTbR1eUmRq2-VavylI7WwoCyZJVDMLwc682D4giEwj4AZGc1HBqTp2y8ONsDpb_SSe51wnnUQEXjuMzEN8ta_iHTIo5T296WloX3XYjpSngM6DRFZoHEkHBFtLryH0tb-5iSfP2pgXitiH7oUMjP7I16NzTkWejMnGYwwl5yuplLDnmJU0ivu-B6btffm6ZK284Sy4IZWxrl7jM7bycGpxD2e4rNRlOy9zCfj72fxLzU" },
-      { name: "Zendaya", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAMbymMQwcFQIZYXcy6oys3w5oi4ooYNjaxkOmGeWdhty76JBPsXva73vczVfd2Ejyx05H9ehE320EBkc8Zkxpx1tdF3O6W3oztOsY8-k4P1harzN-2o0_Ss0CeO8M-hiGXePOSoh62arZJ-YjIXifv39G1Wxnipb-AJ5rT4zratwGbGgc_4PcUrrUKxViDOVv6AiyY7xwSEzrxtuPFQNgPVn0XUiw60bPWjQ0Up2d8td3vrNIqfJsoENHtMu_emoeTIiNDjNznkEw" },
-      { name: "Rebecca Ferguson", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAC_8vfRKP5wI4fE6DdNCgm3mRPEegWb2drWGoICxhW_iN34RC8oQv49J9uOocYm5l60UPw-1ZDOtHPpdBI4BzOyVYExO0_0ou6apHahMv4ENvs_dGJcuy4vM6DGnuGwazZYT1zKlg5I6Ruq1SoswRtE4r5bR7sHYRldEqzodMXjlXs-NBfNl5h1HFpZdR2Y2ZBtog_RZiueGSpQPs1jHh_WSA7yEQhWGTW6-t_ti2ghkmZnRqRKk5-ND3VnL8mqFqVyARiB25rnGg" }
-    ],
-    heroImage: "https://lh3.googleusercontent.com/aida-public/AB6AXuCdEyZqh77xeZN1WGwrRX5BggqiBz-1NdghuAElXbUMMT8IJanOBCle4lnOg6lPmlfY8M-bkvRTqjsOQYmQ7PfP6w8TGH6zwJG64ZRSV307HK8HF-qqKinheEzodKGu8S7JUn9qddNAXJuQBIUQkvsqAyXWqHfZDUImubE-LKhod4if_8cjpGJ2fCyAnsUaIqFX1WChTV503z9feyxvyMo5Jk9Gv25824Bq9CtMXxy0F6l40jA_aSdQ3lwbdCiHq9K9xG697phMw_U"
-  };
+  if (loading) {
+    return <div className="min-h-screen py-24 text-center text-on-surface">Đang tải thông tin phim...</div>;
+  }
+
+  if (error || !movie) {
+    return <div className="min-h-screen py-24 text-center text-error">Không tìm thấy phim này.</div>;
+  }
 
   const showtimes = [
     {
@@ -57,28 +40,33 @@ export default function MovieDetailPage() {
           <div className="absolute inset-0 z-0">
             <img 
               className="w-full h-full object-cover" 
-              alt="Movie Hero" 
-              src={movie.heroImage}
+              alt={movie.title} 
+              src={movie.background || movie.image || "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2000&auto=format"}
             />
             <div className="absolute inset-0 hero-gradient"></div>
           </div>
           <div className="relative z-10 h-full flex flex-col justify-end container mx-auto px-6 pb-16 lg:pb-24">
             <div className="max-w-4xl space-y-6">
               <div className="flex flex-wrap gap-3 items-center">
-                {movie.genres.map((genre, index) => (
+                {(movie.tags || []).map((genre, index) => (
                   <span key={index} className="bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase border border-primary/30">
                     {genre}
                   </span>
                 ))}
                 <div className="flex items-center gap-1 ml-2">
                   <span className="material-symbols-outlined text-tertiary" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
-                  <span className="font-headline font-bold text-lg">{movie.rating}</span>
+                  <span className="font-headline font-bold text-lg">{movie.rating || 0}</span>
                   <span className="text-on-surface-variant text-sm ml-1">/ 10</span>
                 </div>
               </div>
               <h1 className="text-5xl lg:text-8xl font-headline font-extrabold tracking-tighter text-glow leading-tight">
-                Hành Tinh Cát: <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Phần Hai</span>
+                {movie.title}
               </h1>
+              {movie.subTitle && (
+                <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+                  {movie.subTitle}
+                </p>
+              )}
               <div className="flex flex-wrap items-center gap-8 text-on-surface-variant">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined">schedule</span>
@@ -86,11 +74,13 @@ export default function MovieDetailPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined">calendar_today</span>
-                  <span className="font-medium">{movie.year}</span>
+                  <span className="font-medium">
+                    {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : 'N/A'}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined">language</span>
-                  <span className="font-medium">{movie.subtitle}</span>
+                  <span className="font-medium">Phụ đề</span>
                 </div>
               </div>
               <div className="flex flex-wrap gap-4 pt-4">
@@ -117,7 +107,7 @@ export default function MovieDetailPage() {
                 Nội dung phim
               </h3>
               <p className="text-on-surface-variant text-lg leading-relaxed mb-10">
-                {movie.synopsis}
+                {movie.description || 'Chưa có thông tin cập nhật.'}
               </p>
               
               <div className="grid md:grid-cols-2 gap-10">
@@ -125,29 +115,27 @@ export default function MovieDetailPage() {
                   <h4 className="text-primary font-bold text-sm uppercase tracking-widest mb-4">Director</h4>
                   <div className="flex items-center gap-4 group">
                     <div className="w-14 h-14 rounded-full bg-surface-container overflow-hidden">
-                      <img className="w-full h-full object-cover" alt="Director" src={movie.director.image} />
+                      <img className="w-full h-full object-cover" alt="Director" src={`https://ui-avatars.com/api/?name=${encodeURIComponent(movie.director || 'Director')}`} />
                     </div>
                     <div>
-                      <p className="font-bold text-lg">{movie.director.name}</p>
-                      <p className="text-on-surface-variant text-sm">{movie.director.role}</p>
+                      <p className="font-bold text-lg">{movie.director || 'Unknown'}</p>
+                      <p className="text-on-surface-variant text-sm">Director</p>
                     </div>
                   </div>
                 </div>
                 <div>
                   <h4 className="text-primary font-bold text-sm uppercase tracking-widest mb-4">Production</h4>
-                  {movie.production.map((prod, idx) => (
-                    <p key={idx} className="font-bold text-lg">{prod}</p>
-                  ))}
+                  <p className="font-bold text-lg">Studio Demo</p>
                 </div>
               </div>
 
               <div className="mt-12">
                 <h4 className="text-primary font-bold text-sm uppercase tracking-widest mb-6">Cast</h4>
                 <div className="flex flex-wrap gap-4">
-                  {movie.cast.map((actor, idx) => (
+                  {(movie.actors || []).map((actor, idx) => (
                     <div key={idx} className="glass-panel p-3 pr-6 rounded-full flex items-center gap-3 border border-outline-variant/10">
-                      <img className="w-10 h-10 rounded-full object-cover" alt={actor.name} src={actor.image} />
-                      <span className="font-medium text-sm">{actor.name}</span>
+                      <img className="w-10 h-10 rounded-full object-cover" alt={actor} src={`https://ui-avatars.com/api/?name=${encodeURIComponent(actor)}`} />
+                      <span className="font-medium text-sm">{actor}</span>
                     </div>
                   ))}
                   <button className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary border border-outline-variant/10">

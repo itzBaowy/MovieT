@@ -8,39 +8,8 @@ export default function HomePage() {
   const { movies, loading: loadingMovies } = useGetNowShowing();
   const { showtimes, loading: loadingShowtimes } = useGetTodayShowtimes();
 
-  // Mảng fallback data tĩnh từ stitch cho 4 bộ phim
-  const mockStitchMovies = [
-    {
-      id: 1,
-      title: "Vây Hãm: Kẻ Trừng Phạt",
-      poster: "https://lh3.googleusercontent.com/aida-public/AB6AXuArpj7wH3b5BdmT6cUu1UMDEnKN_6cV--LqNKReRkGDxO1Z1VX2BtcsLcpbxglhVp2yBLsiwOR9LQJR8zwoOg2_AgR92MKbbP3aOsyi8xrL-LC_WffdRNxKMi7_ohTfTax2RKVaqjuchnmhhSINxgJMd0MvHx1k4_dQXwFOWpZD9Hf3dXdd7One2m3--BrCAytUyIO5dBLbCuINCguCEIb1-7TNdmEB8ddLu-OfAiG9ZutMyViihiy-t2ZslV9lH2BV1dpd7-hkqwo",
-      rating: 9.2,
-      genre: "Hành Động • 18+",
-    },
-    {
-      id: 2,
-      title: "Hành Tinh Cát: Phần Hai",
-      poster: "https://lh3.googleusercontent.com/aida-public/AB6AXuB9FmAaNxW8Uvr6FN6eu-tuLyfHs8spEZziZ3QQ6WcVZIpNgBdbwUbYpxndnC5H_OKXasZAsIVNknf0jUL894EVXIHYq6a7QgPIRn0NzWbYmeXPC4sJh4DSdmktPZ1fqd1DXyqT3Qxf1cDYliF4AIDwqD_qiQV6IJzuFGX4iX_ZLz0OUBqRmnwebMVrUmhBxSXlADuumrxC3X1dz2Zt1w6jhRZ-TkkSei1yQMgzWy7WxIfEVGk-nPdOTraxj5Yue-LZNUlIhn164b4",
-      rating: 8.5,
-      genre: "Viễn Tưởng • 13+",
-    },
-    {
-      id: 3,
-      title: "Kẻ Theo Dõi",
-      poster: "https://lh3.googleusercontent.com/aida-public/AB6AXuCJiBUxS7hrZpAKmi33RqAEU5rpTAbbSTyfWJzKKWjF5jriUoiJGwg5SXcz6qFkPaogVaorXfp5OPlPWDjOV5w0_ma-c8jP8clz9w_fo1x490p9htt8YCkqUFyjFN9iVn3ZhvLlofvp7AH82YRrYGTd23aoSpgTB7Uvaq3RQZhMM_TxLSm7TFCVruUxNx4351F_5n8MtgFUvjxTeJNHpVRNCNXuo11nv85ZUBRR0sJUUb42g385B0eTMlEkqsfJ1FR7t3uVBtKFC88",
-      rating: 7.8,
-      genre: "Kinh Dị • 18+",
-    },
-    {
-      id: 4,
-      title: "Những Kẻ Thao Túng",
-      poster: "https://lh3.googleusercontent.com/aida-public/AB6AXuCHmZA1Dc5gGjvqjaYrnywWFy2WrkQoAhaLu47d2fYJ8BBzdOsq4ZsthZ-wqJopB5Bs8u6JIFERLjK4ciUjyl6RzlzqWRpXxj3gF4Py-_KtW7uIQVMGYjRJFbpg6pmexQGFeZrruGuHhwZ3ka97FB-35i7Hj3UJd9AHpUcqQjbuuFZsPfquvBrW5f2xRwF8nt5D8zdyj38RpqU79L_jSE2PLA1FTYQf2ZNgtgYXK8PCA0e5UxRBCy55JaYW84s-FhAGl4f3TOrvy8I",
-      rating: 9.5,
-      genre: "Hoạt Hình • P",
-    }
-  ];
-
-  const displayMovies = movies?.length > 0 ? mockStitchMovies : mockStitchMovies; // Dùng hardcode images từ stitch
+  // Sử dụng dữ liệu thật từ API, chỉ lấy 4 phim đầu tiên cho HomePage
+  const displayMovies = movies?.length > 0 ? movies.slice(0, 4) : [];
 
   const mockStitchShowtimes = [
     {

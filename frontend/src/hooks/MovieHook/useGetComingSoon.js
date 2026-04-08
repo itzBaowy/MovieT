@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import MovieService from '../../services/movie/MovieService.js';
 
-export default function useGetNowShowing() {
+export default function useGetComingSoon() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,14 +11,13 @@ export default function useGetNowShowing() {
       setLoading(true);
       setError(null);
       try {
-        const response = await MovieService.getNowShowing();
+        const response = await MovieService.getComingSoon();
         // Lấy array phim từ response
         const apiData = response.data?.metadata || response.data || [];
         
         // Transform the list to match UI's expectations
         const formattedData = apiData.map(movie => ({
           ...movie,
-          // Map DB keys to expected UI keys if necessary
           poster: movie.image,
           genre: movie.tags && movie.tags.length > 0 ? movie.tags.join(', ') : 'Unknown'
         }));
